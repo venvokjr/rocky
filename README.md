@@ -83,7 +83,7 @@ Xray API (`10085`), Nginx (`81`/`444`), SSH-WS Proxy (`8888`), SSH-WS API (`8081
 Jalankan perintah berikut pada terminal server Rocky Linux 9 Anda:
 
 ```shell
-dnf install epel-release -y ; dnf update -y ; dnf install wget curl openssl screen -y ; wget -q https://raw.githubusercontent.com/venvokjr/rocky/main/install.sh ; chmod +x install.sh ; screen -S autoscript ./install.sh ; if [ $? -ne 0 ]; then rm -f install.sh; fi
+dnf install epel-release -y ; dnf update -y ; dnf install wget curl openssl screen -y ; mkdir -p /run/screen ; chmod 777 /run/screen ; wget -q https://raw.githubusercontent.com/venvokjr/rocky/main/install.sh ; chmod +x install.sh ; screen -S autoscript ./install.sh ; if [ $? -ne 0 ]; then rm -f install.sh; fi
 ```
 
 > 💡 **Tips:** Jika sesi SSH Anda terputus saat instalasi, buka kembali terminal dan jalankan:
