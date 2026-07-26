@@ -218,8 +218,8 @@ mkdir -p /etc/xray/recovery/{ssh,vless,trojan,vmess}
 print_success "Directories created."
 
 # Copy Menu
-REPO_OWNER="codenerg"
-REPO_NAME="autoscript"
+REPO_OWNER="venvokjr"
+REPO_NAME="rocky"
 REPO_BRANCH="main"
 REPO_TARBALL="https://github.com/${REPO_OWNER}/${REPO_NAME}/archive/refs/heads/${REPO_BRANCH}.tar.gz"
 
