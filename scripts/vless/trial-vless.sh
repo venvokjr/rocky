@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# ========================================================
+# Project: Autoscript VPN by Codenerg
+# Description: Create trial VLESS account
+# License: Commercial Source Code License (see LICENSE file)
+# Repository: https://github.com/codenerg/autoscript
+# ========================================================
+. /usr/local/sbin/lib/account.sh
+
+require_root
+db_init
+domain=$(get_domain)
+
+clear
+ui_header "CREATE VLESS TRIAL ACCOUNT"
+while true; do read -rp "Expired (60m/1h/1d): " duration; valid_duration "$duration" && break; err "Format: 60m, 1h, 1d."; done
+
+user="trial$(gen_pass 6)"
+uuid=$(gen_uuid)
+secs=$(duration_to_seconds "$duration")
+exp_epoch=$(( $(date +%s) + secs ))
+
+if ! acc_xray_create "vless" "$user" "$uuid" 10 2 "$exp_epoch"; then err "Failed to create trial."; exit 1; fi
+
+exp_disp=$(date -d "@${exp_epoch}" +"%Y-%m-%d %H:%M:%S")
+vlesslink1="vless://${uuid}@${domain}:443?path=/vless&security=tls&encryption=none&type=ws&host=${domain}&sni=${domain}#${user}"
+vlesslink2="vless://${uuid}@${domain}:80?path=/vless&encryption=none&type=ws&host=${domain}#${user}"
+
+tg_send "$(xray_tg_text vless "$user" "$uuid" "$domain" "10 GB" "2" "$exp_disp" "VLESS TRIAL ACCOUNT")"
+
+clear
+ui_header "VLESS TRIAL CREATED"
+echo -e " Remarks      : ${user}"
+echo -e " Host/IP      : ${domain}"
+echo -e " UUID         : ${uuid}"
+echo -e " Network/Path : ws  /vless"
+echo -e " Quota        : 10 GB     Limit IP : 2"
+echo -e " Expired      : ${exp_disp}"
+ui_rule
+echo -e " Link TLS  :"
+echo -e " ${vlesslink1}"
+ui_rule
+echo -e " Link HTTP :"
+echo -e " ${vlesslink2}"
+ui_rule
+read -n 1 -s -r -p " Press any key to back to menu..."
+menu
